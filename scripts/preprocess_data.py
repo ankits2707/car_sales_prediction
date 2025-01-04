@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.impute import SimpleImputer
+import joblib  # Add this import statement
 
 # Load dataset
 data = pd.read_csv('../data/car_resale_data.csv')
@@ -9,7 +10,6 @@ data = pd.read_csv('../data/car_resale_data.csv')
 # Handle missing values
 imputer = SimpleImputer(strategy='mean')
 data.loc[:, data.select_dtypes(include=[np.number]).columns] = imputer.fit_transform(data.select_dtypes(include=[np.number]))
-
 
 # Encode categorical variables
 encoder = LabelEncoder()
@@ -23,3 +23,7 @@ data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
 # Save preprocessed data
 data.to_csv('../outputs/preprocessed_data.csv', index=False)
 print("Preprocessing complete. Data saved to 'outputs/preprocessed_data.csv'")
+
+# Save the scaler and encoder
+joblib.dump(scaler, '../outputs/scaler.pkl')  # Save the scaler
+joblib.dump(encoder, '../outputs/encoder.pkl')  # Save the encoder
